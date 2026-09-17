@@ -1,3 +1,7 @@
+using POS.Domain.Common;
+
+namespace POS.Domain.Entities;
+
 public class Product : EntityBase
 {
     public string ProductCode { get; set; } = string.Empty;

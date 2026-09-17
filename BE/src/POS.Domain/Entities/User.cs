@@ -1,3 +1,7 @@
+using POS.Domain.Common;
+
+namespace POS.Domain.Entities;
+
 public class User : EntityBase
 {
     public required string Username { get; set; }

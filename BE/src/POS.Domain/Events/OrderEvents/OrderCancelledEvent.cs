@@ -1,3 +1,6 @@
+using POS.Domain.Common;
+namespace POS.Domain.Events;
+
 public class OrderCancelledEvent : IDomainEvent
 {
     public Guid OrderId { get; set; }

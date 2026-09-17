@@ -1,11 +1,14 @@
-public class OrderCompletedEvent : IDomainEvent
+using POS.Domain.Common;
+namespace POS.Domain.Events;
+
+public class OrderCreatedEvent : IDomainEvent
 {
     public Guid OrderId { get; set; }
     public Guid CustomerId { get; set; }
     public decimal TotalAmount { get; set; }
     public DateTime OccurredOn { get; set; }
 
-    public OrderCompletedEvent(Guid orderId, Guid customerId, decimal totalAmount, DateTime completedAt)
+    public OrderCreatedEvent(Guid orderId, Guid customerId, decimal totalAmount, DateTime completedAt)
     {
         OrderId = orderId;
         CustomerId = customerId;

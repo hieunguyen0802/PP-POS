@@ -1,3 +1,6 @@
+using POS.Domain.Common;
+namespace POS.Domain.Events;
+
 public class PaymentFailedEvent : IDomainEvent
 {
     public Guid OrderId { get; }

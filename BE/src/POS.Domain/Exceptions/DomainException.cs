@@ -1,3 +1,5 @@
+namespace POS.Domain.Exceptions;
+
 public abstract class DomainException : Exception
 {
     protected DomainException(string message) : base(message)
@@ -7,6 +9,7 @@ public abstract class DomainException : Exception
 
 public static class DomainExceptions
 {
+
     public class EntityNotFound : DomainException
     {
         public EntityNotFound(string entityName, object key)

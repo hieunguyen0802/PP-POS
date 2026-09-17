@@ -1,3 +1,7 @@
+using POS.Domain.Common;
+
+namespace POS.Domain.Events;
+
 public class PaymentProcessedEvent : IDomainEvent
 {
     public Guid PaymentId { get; }

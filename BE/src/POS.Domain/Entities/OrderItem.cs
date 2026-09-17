@@ -1,3 +1,6 @@
+using POS.Domain.Common;
+namespace POS.Domain.Entities;
+
 public class OrderItem : EntityBase
 {
     public decimal UnitPrice { get; set; } = 0m;

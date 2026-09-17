@@ -1,3 +1,7 @@
+using POS.Domain.Common;
+
+namespace POS.Domain.Entities;
+
 public class Customer : EntityBase
 {
     public string CustomerCode { get; set; } = string.Empty;
