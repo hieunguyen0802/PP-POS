@@ -1,0 +1,12 @@
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\bin\Debug\net8.0\POS.Domain.deps.json
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\bin\Debug\net8.0\POS.Domain.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\bin\Debug\net8.0\POS.Domain.pdb
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.AssemblyInfoInputs.cache
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.AssemblyInfo.cs
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.csproj.CoreCompileInputs.cache
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.sourcelink.json
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\refint\POS.Domain.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\POS.Domain.pdb
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Domain\obj\Debug\net8.0\ref\POS.Domain.dll

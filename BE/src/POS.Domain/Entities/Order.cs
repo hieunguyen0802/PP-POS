@@ -2,22 +2,26 @@ using POS.Domain.Common;
 using POS.Domain.Enums;
 using POS.Domain.Helpers;
 using POS.Domain.Exceptions;
-
+using POS.Domain.Events;
 namespace POS.Domain.Entities;
 
-public class Order : EntityBase
+public class Order : AggregateRoot
 {
-    public string OrderNumber { get; set; } = string.Empty;
-    public OrderStatus OrderStatus { get; set; }
-    public DateTime OrderDate { get; set; } = DateTime.Today;
-    public decimal TotalAmount { get; set; } = 0m; // Initialize to 0.0
-    public Guid CustomerId { get; set; }
+    //fields for Order
+    public string OrderNumber { get; private set; } = string.Empty;
+    public OrderStatus OrderStatus { get; private set; }
+    public DateTime OrderDate { get; private set; } = DateTime.Today;
+    public decimal TotalAmount { get; private set; } = 0m; // Initialize to 0.0
+    public Guid CustomerId { get; private set; }
     public Customer? Customer { get; set; }
-    private readonly List<OrderItem> _items = new();
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
+
+    // empty constructor for EF Core
     private Order() { }
 
+
+    // constructor for creating a new order
     public Order(Guid customerId)
     {
         Id = Guid.NewGuid();
@@ -25,32 +29,31 @@ public class Order : EntityBase
         OrderNumber = CodeGenerator.GenerateOrderNumber();
         OrderStatus = OrderStatus.Pending;
         CreatedAt = DateTime.UtcNow;
+        AddDomainEvent(new OrderCreatedEvent(Id, customerId, TotalAmount, CreatedAt));
     }
 
+
+    // functions for adding, removing, and updating items in the order, as well as cancelling the order
     public void AddItem(Guid productId, int quantity, decimal price)
     {
+        EnsureOrderIsEditable();
         if (quantity <= 0)
             throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
 
-        var orderItem = new OrderItem
-        {
-            ProductId = productId,
-            Quantity = quantity,
-            UnitPrice = price
-        };
+        var orderItem = new OrderItem(productId, quantity, price);
 
         OrderItems.Add(orderItem);
-        TotalAmount += quantity * price; // Update total amount
+        RecalculateTotalAmount();
     }
 
     public void RemoveItem(Guid productId)
     {
         EnsureOrderIsEditable();
 
-        var item = _items.FirstOrDefault(i => i.ProductId == productId);
+        var item = OrderItems.FirstOrDefault(i => i.ProductId == productId);
         if (item != null)
         {
-            _items.Remove(item);
+            OrderItems.Remove(item);
             RecalculateTotalAmount();
         }
     }
@@ -65,7 +68,7 @@ public class Order : EntityBase
             return;
         }
 
-        var item = _items.FirstOrDefault(i => i.ProductId == productId);
+        var item = OrderItems.FirstOrDefault(i => i.ProductId == productId);
         if (item == null)
         {
             throw new DomainExceptions.EntityNotFound(nameof(OrderItem), productId);
@@ -75,7 +78,6 @@ public class Order : EntityBase
         RecalculateTotalAmount();
     }
 
-    // 3. Cancel the order
     public void Cancel()
     {
         if (OrderStatus == OrderStatus.Completed)
@@ -84,6 +86,7 @@ public class Order : EntityBase
         }
 
         OrderStatus = OrderStatus.Cancelled;
+        AddDomainEvent(new OrderCancelledEvent(Id, CustomerId, TotalAmount, DateTime.UtcNow));
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -94,6 +97,11 @@ public class Order : EntityBase
         {
             throw new InvalidOperationException("Cannot modify an order that is already completed or cancelled.");
         }
+    }
+
+    private void RecalculateTotalAmount()
+    {
+        TotalAmount = OrderItems.Sum(i => i.Quantity * i.UnitPrice);
     }
 
 

@@ -13,4 +13,15 @@ public static class CodeGenerator
     {
         return $"CUST-{Random.Shared.Next(10000, 99999)}"; ;
     }
+
+    public static string GenerateProductCode(string productType)
+    {
+        return $"{productType}-{Random.Shared.Next(10000, 99999)}"; ;
+    }
+
+    public static string GenerateReferenceNumber()
+    {
+        string datePart = DateTime.UtcNow.ToString("yyyyMMdd");
+        return $"REF-{datePart}-{Random.Shared.Next(10000, 99999)}"; ;
+    }
 }

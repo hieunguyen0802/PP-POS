@@ -12,4 +12,25 @@ public class OrderItem : EntityBase
     public Guid ProductId { get; set; }
     public Product? Product { get; set; }
 
+    // For EF Core
+    private OrderItem() { }
+
+    // Constructor for creating a new order item
+    public OrderItem(Guid productId, int quantity, decimal unitPrice)
+    {
+        ProductId = productId;
+        Quantity = quantity;
+        UnitPrice = unitPrice;
+    }
+
+    public void UpdateQuantity(int newQuantity)
+    {
+        if (newQuantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.", nameof(newQuantity));
+
+        Quantity = newQuantity;
+    }
+
+
+
 }
