@@ -1,0 +1,12 @@
+## .NET build output
+bin/
+obj/
+*.user
+
+## IDE
+.vs/
+.vscode/
+
+## Secrets - never commit real connection strings/passwords
+**/appsettings.Development.json
+**/appsettings.Local.json

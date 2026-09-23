@@ -15,7 +15,7 @@ public class Order : AggregateRoot
     public Guid CustomerId { get; private set; }
     public Customer? Customer { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
+    public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     // empty constructor for EF Core
     private Order() { }

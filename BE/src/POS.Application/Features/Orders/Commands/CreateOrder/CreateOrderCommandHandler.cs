@@ -1,5 +1,4 @@
 using MediatR;
-using POS.Domain.Common;
 using POS.Domain.Exceptions;
 using POS.Domain.Interfaces;
 using POS.Domain.Entities;
