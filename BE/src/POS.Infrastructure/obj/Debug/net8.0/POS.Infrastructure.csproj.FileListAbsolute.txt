@@ -16,3 +16,5 @@ D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Infrastructure\bin\Debug\net8.
 D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Infrastructure\obj\Debug\net8.0\POS.Infrastructure.csproj.AssemblyReference.cache
 D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Infrastructure\obj\Debug\net8.0\POS.Infr.1F9324E1.Up2Date
 D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Infrastructure\obj\Debug\net8.0\POS.Infrastructure.genruntimeconfig.cache
+D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Infrastructure\bin\Debug\net8.0\POS.Application.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Infrastructure\bin\Debug\net8.0\POS.Application.pdb

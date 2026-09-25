@@ -32,7 +32,6 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
             {
                 throw new DomainExceptions.EntityNotFound("Product", itemDto.ProductId);
             }
-            _productRepository.Update(product);
             order.AddItem(product.Id, itemDto.Quantity, product.UnitPrice);
         }
 

@@ -188,3 +188,6 @@ D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Api\bin\Debug\net8.0\POS.Infra
 D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Api\bin\Debug\net8.0\POS.Application.pdb
 D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Api\bin\Debug\net8.0\POS.Infrastructure.pdb
 D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Api\bin\Debug\net8.0\POS.Domain.pdb
+D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Api\bin\Debug\net8.0\AutoMapper.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Api\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Api\bin\Debug\net8.0\BCrypt.Net-Next.dll

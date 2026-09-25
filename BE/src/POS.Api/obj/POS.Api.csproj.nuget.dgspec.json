@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Api\\POS.Api.csproj": {}
+    "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\be\\src\\POS.Api\\POS.Api.csproj": {}
   },
   "projects": {
-    "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Api\\POS.Api.csproj": {
+    "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\be\\src\\POS.Api\\POS.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Api\\POS.Api.csproj",
+        "projectUniqueName": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\be\\src\\POS.Api\\POS.Api.csproj",
         "projectName": "POS.Api",
-        "projectPath": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Api\\POS.Api.csproj",
+        "projectPath": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\be\\src\\POS.Api\\POS.Api.csproj",
         "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Api\\obj\\",
+        "outputPath": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\be\\src\\POS.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -129,6 +129,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "FluentValidation.DependencyInjectionExtensions": {
               "target": "Package",
               "version": "[12.1.1, )"
@@ -238,6 +242,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Application\\POS.Application.csproj": {
+                "projectPath": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Application\\POS.Application.csproj"
+              },
               "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Domain\\POS.Domain.csproj": {
                 "projectPath": "D:\\Hieu Nguyen\\Code\\full-stack\\POS\\POS\\BE\\src\\POS.Domain\\POS.Domain.csproj"
               }
@@ -259,6 +266,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "target": "Package",
               "version": "[8.0.31, )"

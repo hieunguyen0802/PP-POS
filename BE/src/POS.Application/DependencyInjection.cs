@@ -1,3 +1,4 @@
+using AutoMapper;
 using System.Reflection;
 using FluentValidation;
 using MediatR;
@@ -14,6 +15,9 @@ public static class DependencyInjection
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
         services.AddValidatorsFromAssembly(assembly);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        services.AddAutoMapper(typeof(DependencyInjection).Assembly);
+
 
         return services;
     }

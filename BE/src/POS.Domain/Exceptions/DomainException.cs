@@ -27,4 +27,10 @@ public static class DomainExceptions
         public InsufficientStock(string productName, int requestedQuantity, int availableQuantity)
             : base($"Insufficient stock for '{productName}'. Requested: {requestedQuantity}, Available: {availableQuantity}.") { }
     }
+
+    public class EntityAlreadyExists : DomainException
+    {
+        public EntityAlreadyExists(string entityName, object key)
+            : base($"Entity '{entityName}' with key '{key}' already exists.") { }
+    }
 }

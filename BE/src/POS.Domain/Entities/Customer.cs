@@ -3,7 +3,7 @@ using POS.Domain.Helpers;
 
 namespace POS.Domain.Entities;
 
-public class Customer : EntityBase
+public class Customer : AggregateRoot
 {
     public string CustomerCode { get; private set; } = string.Empty;
     public string CustomerName { get; private set; } = string.Empty;

@@ -13,8 +13,7 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.HasIndex(p => p.ReferenceNumber).IsUnique();
 
         // Many Payments can reference one Order (partial/split payments allowed).
-        // Order has no Payments navigation property yet, so this is configured one-directionally
-        // with WithMany() — EF Core still creates the OrderId foreign key column correctly.
+        // Order exposes a Payments collection navigation, mapped here via WithMany(o => o.Payments).
         builder.HasOne(p => p.Order)
             .WithMany(o => o.Payments)
             .HasForeignKey(p => p.OrderId)

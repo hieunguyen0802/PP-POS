@@ -2,10 +2,10 @@ using POS.Domain.Common;
 
 namespace POS.Domain.Entities;
 
-public class User : EntityBase
+public class User : AggregateRoot
 {
-    public string Username { get; private set; }
-    public string PasswordHash { get; private set; }
+    public string Username { get; private set; } = string.Empty;
+    public string PasswordHash { get; private set; } = string.Empty;
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}".Trim();
@@ -27,14 +27,13 @@ public class User : EntityBase
         Role = role;
     }
 
-    public void UpdateUser(string firstName, string lastName, string email, string phoneNumber, UserRole role)
+    public void UpdateUser(string firstName, string lastName, string email, string phoneNumber)
     {
         ValidateUser(firstName: firstName, lastName: lastName, email: email, phoneNumber: phoneNumber);
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         PhoneNumber = phoneNumber;
-        Role = role;
     }
 
     public void ChangeActiveStatus()
