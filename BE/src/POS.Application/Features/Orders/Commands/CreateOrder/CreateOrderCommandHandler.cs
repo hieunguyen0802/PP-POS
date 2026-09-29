@@ -11,19 +11,24 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
     private readonly IProductRepository _productRepository;
     private readonly IUnitOfWork _unitOfWork;
 
+    private readonly ICodeGenerator _codeGenerator;
+
     public CreateOrderCommandHandler(
         IOrderRepository orderRepository,
         IProductRepository productRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ICodeGenerator codeGenerator)
     {
         _orderRepository = orderRepository;
         _productRepository = productRepository;
         _unitOfWork = unitOfWork;
+        _codeGenerator = codeGenerator;
     }
 
     public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = new Order(request.CustomerId);
+        var orderNumber = await _codeGenerator.GenerateCodeAsync("ORD", cancellationToken);
+        var order = new Order(request.CustomerId, orderNumber);
 
         foreach (var itemDto in request.Items)
         {

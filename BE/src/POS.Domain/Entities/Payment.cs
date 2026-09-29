@@ -1,14 +1,22 @@
 using POS.Domain.Common;
 using POS.Domain.Events;
-using POS.Domain.Helpers;
 
 namespace POS.Domain.Entities;
 
 public class Payment : AggregateRoot
 {
     public string ReferenceNumber { get; private set; } = string.Empty;
-    public decimal Amount { get; private set; } = 0m;
-    public DateTime PaymentDate { get; private set; } = DateTime.Now;
+
+    // What the customer handed over (can exceed the order balance for cash).
+    public decimal AmountTendered { get; private set; }
+
+    // What actually got applied to the order's balance (never exceeds RemainingBalance).
+    public decimal AmountApplied { get; private set; }
+
+    // Cash only: AmountTendered - AmountApplied. Zero for card/digital methods.
+    public decimal ChangeGiven { get; private set; }
+
+    public DateTime PaymentDate { get; private set; } = DateTime.UtcNow;
     public PaymentMethod PaymentMethod { get; private set; }
 
     public Guid OrderId { get; private set; }
@@ -16,23 +24,35 @@ public class Payment : AggregateRoot
 
     // For EF Core
     private Payment() { }
-    public Payment(Guid orderId, PaymentMethod paymentMethod, decimal amount)
+
+    // Internal: only Order (the aggregate that owns the payment invariants -
+    // overpayment/change rules) is allowed to construct a Payment. See Order.RecordPayment.
+    internal Payment(Guid orderId, PaymentMethod paymentMethod, decimal amountTendered, decimal amountApplied, decimal changeGiven, string referenceNumber)
     {
-        ValidatePayment(amount, orderId);
+        ValidatePayment(orderId, amountTendered, amountApplied, referenceNumber);
+
         OrderId = orderId;
         PaymentMethod = paymentMethod;
-        Amount = amount;
-        ReferenceNumber = CodeGenerator.GenerateReferenceNumber();
-        AddDomainEvent(new PaymentProcessedEvent(Id, orderId, amount, paymentMethod, ReferenceNumber));
+        AmountTendered = amountTendered;
+        AmountApplied = amountApplied;
+        ChangeGiven = changeGiven;
+        ReferenceNumber = referenceNumber;
+
+        AddDomainEvent(new PaymentProcessedEvent(Id, orderId, amountApplied, paymentMethod, ReferenceNumber));
     }
 
-    private void ValidatePayment(decimal amount, Guid orderId)
+    private static void ValidatePayment(Guid orderId, decimal amountTendered, decimal amountApplied, string referenceNumber)
     {
-        if (amount <= 0)
-            throw new ArgumentException("Payment amount must be greater than zero.", nameof(amount));
-
         if (orderId == Guid.Empty)
             throw new ArgumentException("Order ID cannot be empty.", nameof(orderId));
 
+        if (amountTendered <= 0)
+            throw new ArgumentException("Amount tendered must be greater than zero.", nameof(amountTendered));
+
+        if (amountApplied <= 0)
+            throw new ArgumentException("Amount applied must be greater than zero.", nameof(amountApplied));
+
+        if (string.IsNullOrWhiteSpace(referenceNumber))
+            throw new ArgumentException("Reference number cannot be empty.", nameof(referenceNumber));
     }
 }

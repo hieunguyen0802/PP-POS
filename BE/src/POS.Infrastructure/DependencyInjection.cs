@@ -5,6 +5,7 @@ using POS.Domain.Interfaces;
 using POS.Infrastructure.Persistence;
 using POS.Infrastructure.Repositories;
 using POS.Infrastructure.Security;
+using POS.Infrastructure.Persistence.Services;
 using POS.Application.Common.Interfaces;
 
 namespace POS.Infrastructure;
@@ -24,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+        services.AddScoped<ICodeGenerator, CodeGeneratorService>();
 
 
         return services;

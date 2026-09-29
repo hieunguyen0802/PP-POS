@@ -11,17 +11,17 @@ public static class CodeGenerator
 
     public static string GenerateCustomerNumber()
     {
-        return $"CUST-{Random.Shared.Next(10000, 99999)}"; ;
+        return $"CUST-{Random.Shared.Next(10000, 99999)}";
     }
 
     public static string GenerateProductCode(string productType)
     {
-        return $"{productType}-{Random.Shared.Next(10000, 99999)}"; ;
+        return $"{productType}-{Random.Shared.Next(10000, 99999)}";
     }
 
     public static string GenerateReferenceNumber()
     {
         string datePart = DateTime.UtcNow.ToString("yyyyMMdd");
-        return $"REF-{datePart}-{Random.Shared.Next(10000, 99999)}"; ;
+        return $"REF-{datePart}-{Random.Shared.Next(10000, 99999)}";
     }
 }

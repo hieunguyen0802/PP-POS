@@ -1,5 +1,4 @@
 using POS.Domain.Common;
-using POS.Domain.Helpers;
 
 namespace POS.Domain.Entities;
 
@@ -11,14 +10,17 @@ public class Customer : AggregateRoot
     public string CustomerEmail { get; private set; } = string.Empty;
     public string? CustomerAddress { get; private set; }
 
+    public string KeycloakId { get; private set; } = string.Empty;
+
+
     private Customer() { } // For EF Core
 
-    public Customer(string customerName, string customerPhone, string customerEmail, string? customerAddress = null)
+    public Customer(string customerName, string customerPhone, string customerEmail, string customerCode, string? customerAddress = null)
     {
 
-        ValidateCustomers(customerName, customerPhone, customerEmail);
+        ValidateCustomers(customerName, customerPhone, customerEmail, customerCode);
 
-        CustomerCode = CodeGenerator.GenerateCustomerNumber();
+        CustomerCode = customerCode;
         CustomerName = customerName;
         CustomerPhone = customerPhone;
         CustomerEmail = customerEmail;
@@ -35,7 +37,7 @@ public class Customer : AggregateRoot
         CustomerAddress = customerAddress;
     }
 
-    private void ValidateCustomers(string customerName, string customerPhone, string customerEmail)
+    private void ValidateCustomers(string customerName, string customerPhone, string customerEmail, string? customerCode = null)
     {
         if (string.IsNullOrWhiteSpace(customerName))
             throw new ArgumentException("Customer name cannot be empty.", nameof(customerName));
@@ -45,6 +47,9 @@ public class Customer : AggregateRoot
 
         if (string.IsNullOrWhiteSpace(customerEmail))
             throw new ArgumentException("Customer email cannot be empty.", nameof(customerEmail));
+
+        if (string.IsNullOrWhiteSpace(customerCode))
+            throw new ArgumentException("Customer code cannot be empty.", nameof(customerCode));
     }
 
 }

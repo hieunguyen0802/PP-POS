@@ -191,3 +191,5 @@ D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Api\bin\Debug\net8.0\POS.Domai
 D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Api\bin\Debug\net8.0\AutoMapper.dll
 D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Api\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\POS.Api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\BE\src\POS.Api\bin\Debug\net8.0\Bogus.dll
+D:\Hieu Nguyen\Code\full-stack\POS\POS\be\src\pos.api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

@@ -16,7 +16,11 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order?> GetByIdAsync(Guid orderId, CancellationToken cancellationToken = default)
     {
-        return await _context.Orders.FindAsync(new object[] { orderId }, cancellationToken);
+        // Payments must be loaded: Order.RemainingBalance/IsFullyPaid/AmountPaid are computed
+        // from the Payments collection, so callers (e.g. RecordPayment) need it populated.
+        return await _context.Orders
+            .Include(o => o.Payments)
+            .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
     }
 
     public async Task<IEnumerable<Order>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -31,6 +35,16 @@ public class OrderRepository : IOrderRepository
             .Include(o => o.Customer)
             .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
     }
+
+    public async Task<IEnumerable<Order>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+            .Include(o => o.Customer)
+            .ToListAsync(cancellationToken);
+    }
+
 
     public async Task<IReadOnlyList<Order>> GetOrdersByCustomerAsync(Guid customerId, CancellationToken cancellationToken = default)
     {

@@ -8,6 +8,6 @@ public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentComm
     {
         RuleFor(x => x.OrderId).NotEmpty();
         RuleFor(x => x.PaymentMethod).IsInEnum();
-        RuleFor(x => x.Amount).GreaterThan(0);
+        RuleFor(x => x.AmountTendered).GreaterThan(0);
     }
 }

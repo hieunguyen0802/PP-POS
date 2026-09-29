@@ -6,8 +6,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 {
     public CreateProductCommandValidator()
     {
-        RuleFor(x => x.ProductCode)
-            .NotEmpty().WithMessage("Product code is required.");
 
         RuleFor(x => x.ProductName)
             .NotEmpty().WithMessage("Product name is required.");

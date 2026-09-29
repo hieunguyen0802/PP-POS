@@ -3,6 +3,7 @@ using POS.Domain.Enums;
 using POS.Domain.Helpers;
 using POS.Domain.Exceptions;
 using POS.Domain.Events;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace POS.Domain.Entities;
 
 public class Order : AggregateRoot
@@ -17,16 +18,28 @@ public class Order : AggregateRoot
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
+    [NotMapped]
+    public decimal AmountPaid => Payments.Sum(p => p.AmountApplied);
+
+    [NotMapped]
+    public decimal RemainingBalance => TotalAmount - AmountPaid;
+
+    [NotMapped]
+    public bool IsFullyPaid => RemainingBalance <= 0;
+
     // empty constructor for EF Core
     private Order() { }
 
 
     // constructor for creating a new order
-    public Order(Guid customerId)
+    public Order(Guid customerId, string orderNumber)
     {
+        if (string.IsNullOrWhiteSpace(orderNumber))
+            throw new ArgumentException("Order number cannot be empty.", nameof(orderNumber));
+
         Id = Guid.NewGuid();
         CustomerId = customerId;
-        OrderNumber = CodeGenerator.GenerateOrderNumber();
+        OrderNumber = orderNumber;
         OrderStatus = OrderStatus.Pending;
         CreatedAt = DateTime.UtcNow;
         AddDomainEvent(new OrderCreatedEvent(Id, customerId, TotalAmount, CreatedAt));
@@ -102,6 +115,48 @@ public class Order : AggregateRoot
     private void RecalculateTotalAmount()
     {
         TotalAmount = OrderItems.Sum(i => i.Quantity * i.UnitPrice);
+    }
+
+    // Records a payment against this order and applies the overpayment/change rules:
+    // - Cash can be tendered over the remaining balance; the excess is returned as change.
+    // - Card/digital methods must not exceed the remaining balance (no "change" concept for those).
+    // Automatically transitions the order to Completed once it becomes fully paid.
+    public Payment RecordPayment(PaymentMethod method, decimal amountTendered, string referenceNumber)
+    {
+        if (OrderStatus == OrderStatus.Cancelled)
+            throw new DomainExceptions.InvalidOrderStatus(OrderStatus.ToString(), OrderStatus.Completed.ToString());
+
+        if (amountTendered <= 0)
+            throw new ArgumentException("Amount tendered must be greater than zero.", nameof(amountTendered));
+
+        if (IsFullyPaid)
+            throw new InvalidOperationException("Order is already fully paid.");
+
+        var remaining = RemainingBalance;
+        var amountApplied = Math.Min(amountTendered, remaining);
+
+        if (method != PaymentMethod.Cash && amountTendered > remaining)
+        {
+            throw new InvalidOperationException(
+                $"{method} payment ({amountTendered:C}) cannot exceed the remaining balance ({remaining:C}). Only cash payments may be tendered over the amount owed.");
+        }
+
+        var changeGiven = method == PaymentMethod.Cash ? amountTendered - amountApplied : 0m;
+
+        if (referenceNumber == null)
+            throw new ArgumentException("Reference number cannot be null.", nameof(referenceNumber));
+
+        var payment = new Payment(Id, method, amountTendered, amountApplied, changeGiven, referenceNumber);
+        Payments.Add(payment);
+        UpdatedAt = DateTime.UtcNow;
+
+        if (IsFullyPaid)
+        {
+            OrderStatus = OrderStatus.Completed;
+            AddDomainEvent(new OrderCompletedEvent(Id, CustomerId, TotalAmount, UpdatedAt.Value));
+        }
+
+        return payment;
     }
 
 

@@ -24,6 +24,11 @@ public class ProductRepository : IProductRepository
         return await _context.Products.FirstOrDefaultAsync(p => p.ProductBarcode == barcode, cancellationToken);
     }
 
+    public async Task<bool> ExistsByProductCodeAsync(string productCode, CancellationToken cancellationToken = default)
+    {
+        return await _context.Products.AnyAsync(p => p.ProductCode == productCode, cancellationToken);
+    }
+
     public async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Products.ToListAsync(cancellationToken);

@@ -34,6 +34,12 @@ public class CustomerRepository : ICustomerRepository
         return await _context.Customers.AnyAsync(c => c.CustomerPhone == phone, cancellationToken);
     }
 
+    public async Task<bool> ExistByCodeAsync(string customerCode, CancellationToken cancellationToken = default)
+    {
+        return await _context.Customers.AnyAsync(c => c.CustomerCode == customerCode, cancellationToken);
+    }
+
+
     public async Task<IReadOnlyList<Customer>> SearchByNameOrPhoneAsync(string searchTerm, CancellationToken cancellationToken = default)
     {
         return await _context.Customers

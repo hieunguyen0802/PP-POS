@@ -22,6 +22,22 @@ namespace POS.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("POS.Domain.Entities.CodeSequence", b =>
+                {
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DateKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("LastValue")
+                        .HasColumnType("int");
+
+                    b.HasKey("Category", "DateKey");
+
+                    b.ToTable("CodeSequences");
+                });
+
             modelBuilder.Entity("POS.Domain.Entities.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -51,6 +67,10 @@ namespace POS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KeycloakId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -159,7 +179,13 @@ namespace POS.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("AmountApplied")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AmountTendered")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ChangeGiven")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")

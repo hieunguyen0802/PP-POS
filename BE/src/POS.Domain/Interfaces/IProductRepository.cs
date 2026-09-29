@@ -5,4 +5,6 @@ public interface IProductRepository : IRepository<Product>
 {
     Task<Product?> GetByProductCodeAsync(string sku, CancellationToken cancellationToken = default);
     Task<Product?> GetByBarcodeAsync(string barcode, CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsByProductCodeAsync(string productCode, CancellationToken cancellationToken = default);
 }
