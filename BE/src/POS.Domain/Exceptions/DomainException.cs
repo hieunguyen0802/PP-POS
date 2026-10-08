@@ -24,8 +24,9 @@ public static class DomainExceptions
 
     public class InsufficientStock : DomainException
     {
-        public InsufficientStock(string productName, int requestedQuantity, int availableQuantity)
-            : base($"Insufficient stock for '{productName}'. Requested: {requestedQuantity}, Available: {availableQuantity}.") { }
+
+        public InsufficientStock(string productName, int requestedQuantity)
+            : base($"Insufficient stock for '{productName}'. Requested: {requestedQuantity}.") { }
     }
 
     public class EntityAlreadyExists : DomainException

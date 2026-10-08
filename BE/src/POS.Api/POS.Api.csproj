@@ -14,6 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.29.3" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <Protobuf Include="Protos\inventory.proto" GrpcServices="Client" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\POS.Application\POS.Application.csproj" />
     <ProjectReference Include="..\POS.Infrastructure\POS.Infrastructure.csproj" />
   </ItemGroup>

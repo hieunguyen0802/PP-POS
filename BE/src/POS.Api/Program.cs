@@ -4,6 +4,11 @@ using POS.Application;
 using POS.Infrastructure;
 using POS.Infrastructure.Persistence.Seed;
 using POS.Api.Middleware;
+using POS.Api.Services;
+using POS.Application.Common.Interfaces;
+using Inventory.Api.GrpcContracts;
+using Grpc.Core;
+using Grpc.Net.Client.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -150,6 +155,34 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddAntiforgery(options => options.HeaderName = "XSRF-TOKEN");
+
+builder.Services.AddGrpcClient<StockService.StockServiceClient>(o =>
+{
+    o.Address = new Uri(builder.Configuration["Inventory:GrpcUrl"]!);
+})
+.ConfigureChannel(o =>
+{
+    o.ServiceConfig = new ServiceConfig
+    {
+        MethodConfigs =
+        {
+            new MethodConfig
+            {
+                Names = { MethodName.Default },
+                RetryPolicy = new RetryPolicy
+                {
+                    MaxAttempts = 3,
+                    InitialBackoff = TimeSpan.FromMilliseconds(50),
+                    MaxBackoff = TimeSpan.FromMilliseconds(500),
+                    BackoffMultiplier = 2,
+                    RetryableStatusCodes = { StatusCode.Aborted }
+                }
+            }
+        }
+    };
+});
+
+builder.Services.AddScoped<IInventoryService, GrpcInventoryService>();
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();

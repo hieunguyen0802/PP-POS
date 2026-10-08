@@ -22,6 +22,14 @@ namespace POS.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PosDBContext).Assembly);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes()
+             .Where(t => typeof(EntityBase).IsAssignableFrom(t.ClrType)))
+            {
+                modelBuilder.Entity(entityType.ClrType)
+                    .Property(nameof(EntityBase.Id))
+                    .ValueGeneratedNever();
+            }
         }
 
         public override int SaveChanges()

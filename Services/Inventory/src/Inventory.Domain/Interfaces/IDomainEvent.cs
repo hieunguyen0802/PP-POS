@@ -1,0 +1,6 @@
+namespace Inventory.Domain.Common;
+
+public interface IDomainEvent
+{
+    DateTime OccurredOn { get; }
+}

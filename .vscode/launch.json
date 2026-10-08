@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "POS.Api (https profile)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/BE/src/POS.Api/bin/Debug/net8.0/POS.Api.dll",
+      "cwd": "${workspaceFolder}/BE/src/POS.Api",
+      "launchSettingsFilePath": "${workspaceFolder}/BE/src/POS.Api/Properties/launchSettings.json",
+      "launchSettingsProfile": "https"
+    }
+  ]
+}
