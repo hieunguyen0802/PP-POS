@@ -2,11 +2,21 @@
 bin/
 obj/
 *.user
+TestResults/
 
 ## IDE
 .vs/
-.vscode/
+.idea/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 
-## Secrets - never commit real connection strings/passwords
-**/appsettings.Development.json
+## Local overrides and real secrets (dev settings with local defaults ARE committed)
 **/appsettings.Local.json
+.env
+*.pfx
+secrets.json
+
+## Frontend
+node_modules/
+dist/
