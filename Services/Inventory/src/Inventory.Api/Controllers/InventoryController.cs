@@ -3,6 +3,10 @@ using Inventory.Application.Features.InventoryItems.Commands.CreateInventoryItem
 using Inventory.Application.Features.InventoryItems.Commands.ReserveStock;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Inventory.Application.Features.InventoryItems.Commands.ReceiveStock;
+using Inventory.Application.Features.InventoryItems.Commands.AdjustStock;
+using Inventory.Application.Features.InventoryItems.Queries.GetAdjustmentHistory;
 
 namespace Inventory.Api.Controllers;
 
@@ -24,6 +28,8 @@ public class InventoryController : ControllerBase
         return Ok(stockLevel);
     }
 
+
+    [Authorize(Policy = "StockManager")]
     [HttpPost]
     public async Task<IActionResult> CreateInventoryItem([FromBody] CreateInventoryItemCommand command, CancellationToken cancellationToken)
     {
@@ -31,10 +37,37 @@ public class InventoryController : ControllerBase
         return Ok(id);
     }
 
+    [Authorize(Policy = "InternalService")]
     [HttpPost]
     public async Task<IActionResult> ReserveStock([FromBody] ReserveStockCommand command, CancellationToken cancellationToken)
     {
         var remaining = await _mediator.Send(command, cancellationToken);
         return Ok(remaining);
     }
+
+    [Authorize(Policy = "StockManager")]
+    [HttpPost]
+    public async Task<IActionResult> ReceiveStock([FromBody] ReceiveStockCommand command, CancellationToken cancellationToken)
+    {
+        var newQuantity = await _mediator.Send(command, cancellationToken);
+        return Ok(newQuantity);
+    }
+
+    [Authorize(Policy = "StockManager")]
+    [HttpPost]
+    public async Task<IActionResult> AdjustStock([FromBody] AdjustStockCommand command, CancellationToken cancellationToken)
+    {
+        var newQuantity = await _mediator.Send(command, cancellationToken);
+        return Ok(newQuantity);
+    }
+
+    [Authorize(Policy = "StockManager")]
+    [HttpGet("{productId}")]
+    public async Task<IActionResult> GetAdjustmentHistory(Guid productId, CancellationToken cancellationToken)
+    {
+        var history = await _mediator.Send(new GetAdjustmentHistoryQuery(productId), cancellationToken);
+        return Ok(history);
+    }
+
+
 }

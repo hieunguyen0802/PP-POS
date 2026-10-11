@@ -1,4 +1,4 @@
-using Inventory.Application.DTOs.Inventory;
+using Inventory.Application.DTOs;
 using MediatR;
 
 

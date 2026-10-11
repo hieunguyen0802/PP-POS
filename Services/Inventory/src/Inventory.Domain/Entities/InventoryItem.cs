@@ -27,8 +27,7 @@ public class InventoryItem : EntityBase
             throw new ArgumentException("Quantity to receive must be positive.");
 
         QuantityOnHand += quantity;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 
     public void Reserve(int quantity)
@@ -39,8 +38,7 @@ public class InventoryItem : EntityBase
             throw new DomainExceptions.InsufficientStock(ProductId, quantity, QuantityOnHand);
 
         QuantityOnHand -= quantity;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 
     public void Release(int quantity)
@@ -49,19 +47,17 @@ public class InventoryItem : EntityBase
             throw new ArgumentException("Quantity to release must be positive.");
 
         QuantityOnHand += quantity;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 
     public void Adjust(int delta)
     {
         var newQuantity = QuantityOnHand + delta;
         if (newQuantity < 0)
-            throw new InvalidOperationException("Adjustment would result in negative stock.");
+            throw new DomainExceptions.InsufficientStock(ProductId, -delta, QuantityOnHand);
 
         QuantityOnHand = newQuantity;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 
     public bool IsBelowReorderThreshold() => QuantityOnHand < ReorderThreshold;

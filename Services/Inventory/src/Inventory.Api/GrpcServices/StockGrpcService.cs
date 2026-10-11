@@ -5,10 +5,11 @@ using Inventory.Api.GrpcContracts;
 using Inventory.Application.Features.InventoryItems.Commands.ReserveStock;
 using Inventory.Domain.Exceptions;
 using MediatR;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inventory.Api.GrpcServices;
 
+[Authorize(Policy = "InternalService")]
 public class StockGrpcService : StockService.StockServiceBase
 {
     private readonly IMediator _mediator;

@@ -8,27 +8,90 @@ services:
       - 14333:1433
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=StrongP@ssw0rd2026!
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}
     volumes:
       - sqldata:/var/opt/mssql
     networks:
       - pos-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
+    image: quay.io/keycloak/keycloak:26.7.4
     container_name: keycloak
     command: start-dev
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HOSTNAME=http://localhost:8080
+      - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
     ports:
       - "8080:8080"
+    networks:
+      - pos-network
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+
+  inventory:
+    build:
+      context: ./Services/Inventory
+    container_name: inventory-api
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__InventoryDatabase=Server=sqlserver,1433;Database=Inventory_DB;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
+      - Keycloak__Authority=http://keycloak:8080/realms/pos-staff
+      - Keycloak__Audience=account
+      - Keycloak__RequireHttpsMetadata=false
+
+      # Two ports: REST needs HTTP/1.1 and gRPC needs HTTP/2 (without TLS they cannot share a port)
+      - Kestrel__Endpoints__Rest__Url=http://*:8080
+      - Kestrel__Endpoints__Rest__Protocols=Http1
+      - Kestrel__Endpoints__Grpc__Url=http://*:8081
+      - Kestrel__Endpoints__Grpc__Protocols=Http2
+    ports:
+      - "5100:8080"   # REST + Swagger
+      - "5101:8081"   # gRPC
+    networks:
+      - pos-network
+  pos:
+    build:
+      context: ./BE
+    container_name: pos-api
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      inventory:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__PosDbConnection: "Server=sqlserver,1433;Database=POS_DB;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;"
+      Keycloak__Authority: http://keycloak:8080/realms/pos-staff
+      Keycloak__CustomerAuthority: http://keycloak:8080/realms/pos-customers
+      Keycloak__Audience: account
+      Keycloak__RequireHttpsMetadata: "false"
+      Keycloak__TokenEndpoint: http://keycloak:8080/realms/pos-staff/protocol/openid-connect/token
+      Keycloak__ClientId: pos-api
+      Keycloak__ClientSecret: ${POS_API_CLIENT_SECRET:?set POS_API_CLIENT_SECRET in .env}
+      Inventory__GrpcUrl: http://inventory:8081
+      Inventory__AllowInsecureCallCredentials: "true"
+      ASPNETCORE_HTTP_PORTS: "8080"
+    ports:
+      - "5200:8080"
     networks:
       - pos-network
 
 volumes:
   sqldata:
-
+  keycloak-data:
+    external: true          
+    name: pos-keycloak-data
 networks:
   pos-network:
 

@@ -20,7 +20,6 @@ public class StockAdjustment : EntityBase
     {
         Quantity = newQuantity;
         Reason = newReason;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 }

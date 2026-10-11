@@ -32,5 +32,7 @@ public class PurchaseOrderConfiguration : IEntityTypeConfiguration<PurchaseOrder
         // Items is a read-only view over the private _items list.
         // Tell EF to fill the field directly, so callers can never bypass AddItem().
         builder.Navigation(p => p.Items).UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Property(p => p.RowVersion).IsRowVersion();
     }
 }

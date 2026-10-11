@@ -31,10 +31,11 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer("Staff", options =>
     {
-        options.Authority = "http://localhost:8080/realms/pos-staff";
-        options.Audience = "account";
-        // Keycloak runs over plain HTTP in local dev - never do this in production.
-        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        options.Authority = builder.Configuration["Keycloak:Authority"]
+            ?? throw new InvalidOperationException("Keycloak:Authority is not configured.");
+        options.Audience = builder.Configuration["Keycloak:Audience"] ?? "account";
+        options.RequireHttpsMetadata = builder.Configuration.GetValue<bool?>("Keycloak:RequireHttpsMetadata")
+            ?? !builder.Environment.IsDevelopment();
 
         options.Events = new JwtBearerEvents
         {
@@ -69,9 +70,11 @@ builder.Services.AddAuthentication(options =>
     })
     .AddJwtBearer("Customer", options =>
     {
-        options.Authority = "http://localhost:8080/realms/pos-customers";
-        options.Audience = "account";
-        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        options.Authority = builder.Configuration["Keycloak:CustomerAuthority"]
+            ?? throw new InvalidOperationException("Keycloak:CustomerAuthority is not configured.");
+        options.Audience = builder.Configuration["Keycloak:Audience"] ?? "account";
+        options.RequireHttpsMetadata = builder.Configuration.GetValue<bool?>("Keycloak:RequireHttpsMetadata")
+            ?? !builder.Environment.IsDevelopment();
 
         options.Events = new JwtBearerEvents
         {
@@ -162,6 +165,8 @@ builder.Services.AddGrpcClient<StockService.StockServiceClient>(o =>
 })
 .ConfigureChannel(o =>
 {
+    o.UnsafeUseInsecureChannelCallCredentials =
+    builder.Configuration.GetValue<bool>("Inventory:AllowInsecureCallCredentials");
     o.ServiceConfig = new ServiceConfig
     {
         MethodConfigs =
@@ -180,7 +185,16 @@ builder.Services.AddGrpcClient<StockService.StockServiceClient>(o =>
             }
         }
     };
-});
+})
+.AddCallCredentials(async (context, metadata, serviceProvider) =>
+{
+    var provider = serviceProvider.GetRequiredService<KeycloakServiceTokenProvider>();
+    var token = await provider.GetTokenAsync(context.CancellationToken);
+    metadata.Add("Authorization", $"Bearer {token}");
+}); ;
+
+builder.Services.AddHttpClient("keycloak");
+builder.Services.AddSingleton<KeycloakServiceTokenProvider>();
 
 builder.Services.AddScoped<IInventoryService, GrpcInventoryService>();
 builder.Services.AddMemoryCache();

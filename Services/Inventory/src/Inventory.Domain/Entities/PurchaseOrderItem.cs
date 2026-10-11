@@ -26,7 +26,6 @@ public class PurchaseOrderItem : EntityBase
     {
         Quantity = newQuantity;
         UnitPrice = newUnitPrice;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 }

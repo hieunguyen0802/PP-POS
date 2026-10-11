@@ -1,5 +1,5 @@
 using AutoMapper;
-using Inventory.Application.DTOs.Inventory;
+using Inventory.Application.DTOs;
 using Inventory.Domain.Interfaces;
 using Inventory.Domain.Exceptions;
 using MediatR;

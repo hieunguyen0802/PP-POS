@@ -15,5 +15,7 @@ public class StockAdjustmentConfiguration : IEntityTypeConfiguration<StockAdjust
 
         // Not unique: a product can have many adjustments over time. The index just speeds up history lookups.
         builder.HasIndex(a => a.ProductId);
+
+
     }
 }

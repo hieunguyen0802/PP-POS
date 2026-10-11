@@ -18,7 +18,6 @@ public class Supplier : AggregateRoot
     public void UpdateContactInfo(string newContactInfo)
     {
         ContactInfo = newContactInfo;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 }

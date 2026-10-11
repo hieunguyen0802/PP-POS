@@ -9,6 +9,7 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
     public void Configure(EntityTypeBuilder<Supplier> builder)
     {
         builder.HasKey(s => s.Id);
+        builder.HasIndex(s => s.Name).IsUnique();
 
         builder.Property(s => s.Name).IsRequired().HasMaxLength(200);
 

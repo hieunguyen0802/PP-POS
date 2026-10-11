@@ -1,4 +1,5 @@
 using Inventory.Domain.Common;
+using Inventory.Domain.Exceptions;
 
 namespace Inventory.Domain.Entities;
 
@@ -13,6 +14,8 @@ public class PurchaseOrder : AggregateRoot
 
     private readonly List<PurchaseOrderItem> _items = new();
     public IReadOnlyCollection<PurchaseOrderItem> Items => _items.AsReadOnly();
+
+    public byte[] RowVersion { get; private set; } = Array.Empty<byte>();
 
     private PurchaseOrder() { OrderNumber = null!; Supplier = null!; }
 
@@ -31,8 +34,7 @@ public class PurchaseOrder : AggregateRoot
 
         OrderNumber = newOrderNumber;
         OrderDate = newOrderDate;
-        UpdatedAt = DateTime.UtcNow;
-        UpdatedBy = "System";
+
     }
 
     public void AddItem(Guid productId, int quantity, decimal unitPrice)
@@ -46,7 +48,7 @@ public class PurchaseOrder : AggregateRoot
     public void MarkAsOrdered()
     {
         if (Status != PurchaseOrderStatus.Draft)
-            throw new InvalidOperationException("Only a Draft purchase order can be marked as Ordered.");
+            throw new DomainExceptions.InvalidPurchaseOrderStatus(Status.ToString(), nameof(PurchaseOrderStatus.Ordered));
         if (_items.Count == 0)
             throw new InvalidOperationException("Cannot order a purchase order with no items.");
 
@@ -56,7 +58,7 @@ public class PurchaseOrder : AggregateRoot
     public void MarkAsReceived()
     {
         if (Status != PurchaseOrderStatus.Ordered)
-            throw new InvalidOperationException("Only an Ordered purchase order can be marked as Received.");
+            throw new DomainExceptions.InvalidPurchaseOrderStatus(Status.ToString(), nameof(PurchaseOrderStatus.Received));
 
         Status = PurchaseOrderStatus.Received;
     }
@@ -64,7 +66,7 @@ public class PurchaseOrder : AggregateRoot
     public void Cancel()
     {
         if (Status == PurchaseOrderStatus.Received)
-            throw new InvalidOperationException("Cannot cancel a purchase order that has already been Received.");
+            throw new DomainExceptions.InvalidPurchaseOrderStatus(Status.ToString(), nameof(PurchaseOrderStatus.Cancelled));
 
         Status = PurchaseOrderStatus.Cancelled;
     }

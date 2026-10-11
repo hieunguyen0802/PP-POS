@@ -17,6 +17,9 @@ public static class DependencyInjection
 
         // Register repositories
         services.AddScoped<IInventoryItemRepository, InventoryItemRepository>();
+        services.AddScoped<IStockAdjustmentRepository, StockAdjustmentRepository>();
+        services.AddScoped<ISupplierRepository, SupplierRepository>();
+        services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 
         // Register Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();

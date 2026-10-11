@@ -1,3 +1,4 @@
+using Inventory.Application.Common.Interfaces;
 using Inventory.Domain.Common;
 using Inventory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -5,9 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Inventory.Infrastructure.Persistence;
 
 public class InventoryDbContext : DbContext
+
 {
-    public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options)
+    private readonly ICurrentUser? _currentUser;
+    public InventoryDbContext(DbContextOptions<InventoryDbContext> options, ICurrentUser? currentUser = null) : base(options)
     {
+        _currentUser = currentUser;
     }
 
     public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
@@ -16,11 +20,21 @@ public class InventoryDbContext : DbContext
     public DbSet<PurchaseOrderItem> PurchaseOrderItems => Set<PurchaseOrderItem>();
     public DbSet<StockAdjustment> StockAdjustments => Set<StockAdjustment>();
 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(InventoryDbContext).Assembly);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes()
+                 .Where(t => typeof(EntityBase).IsAssignableFrom(t.ClrType)))
+        {
+            modelBuilder.Entity(entityType.ClrType)
+                .Property(nameof(EntityBase.Id))
+                .ValueGeneratedNever();
+        }
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -33,7 +47,7 @@ public class InventoryDbContext : DbContext
     private void ApplyAuditInfo()
     {
         // TODO: replace "System" with the authenticated user once auth is wired up.
-        const string currentUser = "System";
+        var currentUser = _currentUser?.UserName ?? "System"; ;
         var utcNow = DateTime.UtcNow;
 
         var entries = ChangeTracker.Entries<EntityBase>()
