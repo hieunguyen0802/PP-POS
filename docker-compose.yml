@@ -87,6 +87,43 @@ services:
     networks:
       - pos-network
 
+
+  mcp:
+    build:
+      context: ./Services/Mcp
+    container_name: pos-mcp
+    depends_on:
+      inventory:
+        condition: service_started
+      pos:
+        condition: service_started
+    environment:
+      MCP_TRANSPORT: http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8200"
+      MCP_INVENTORY_BASE_URL: http://inventory:8080
+      MCP_POS_BASE_URL: http://pos:8080
+      MCP_KEYCLOAK_TOKEN_URL: http://keycloak:8080/realms/pos-staff/protocol/openid-connect/token
+      MCP_KEYCLOAK_CLIENT_SECRET: ${POS_MCP_CLIENT_SECRET:?set POS_MCP_CLIENT_SECRET in .env}
+    networks:
+      - pos-network
+    # no "ports:" on purpose: only the assistant needs to reach MCP
+
+  assistant:
+    build:
+      context: ./Services/Assistant
+    container_name: pos-assistant
+    depends_on:
+      mcp:
+        condition: service_started
+    environment:
+      MCP_URL: http://mcp:8200/mcp
+      LLM_API_KEY: ${LLM_API_KEY:?set LLM_API_KEY in .env}
+    ports:
+      - "8100:8100"
+    networks:
+      - pos-network
+
 volumes:
   sqldata:
   keycloak-data:
