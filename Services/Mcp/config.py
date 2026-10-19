@@ -9,7 +9,13 @@ class Settings(BaseSettings):
         "http://localhost:8080/realms/pos-staff/protocol/openid-connect/token"
     )
     keycloak_client_id: str = "pos-mcp"
-    keycloak_client_secret: str = "8OyFViize1RFgYfTltV9yPiGhSq8IWi5SHEPfRW1LNAXQJhOAffQGTXhN123QpiAIwK2lv8T7jfnF40fpICZCv"
+    keycloak_client_secret: str 
+
+    transport: str = "stdio"
+    host: str = "127.0.0.1"
+    port: int = 8200
+    
+    pos_base_url: str = "http://localhost:5200"
 
 
 settings = Settings()
