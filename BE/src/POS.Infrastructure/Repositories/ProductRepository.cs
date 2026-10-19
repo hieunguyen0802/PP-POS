@@ -24,6 +24,15 @@ public class ProductRepository : IProductRepository
         return await _context.Products.FirstOrDefaultAsync(p => p.ProductBarcode == barcode, cancellationToken);
     }
 
+    public async Task<List<Product>> SearchByNameAsync(string term, int limit, CancellationToken cancellationToken = default)
+    {
+        return await _context.Products
+            .Where(p => p.IsActive && p.ProductName.Contains(term))
+            .OrderBy(p => p.ProductName)
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> ExistsByProductCodeAsync(string productCode, CancellationToken cancellationToken = default)
     {
         return await _context.Products.AnyAsync(p => p.ProductCode == productCode, cancellationToken);

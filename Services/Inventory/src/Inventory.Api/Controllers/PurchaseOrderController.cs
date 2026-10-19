@@ -10,20 +10,23 @@ using Inventory.Application.Features.PurchaseOrders.Commands.CancelPurchaseOrder
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-[Authorize(Policy = "StockManager")]
+
 public class PurchaseOrderController : ControllerBase
 {
     private readonly IMediator _mediator;
     public PurchaseOrderController(IMediator mediator) => _mediator = mediator;
 
+    [Authorize(Policy = "StockManager")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreatePurchaseOrderCommand command, CancellationToken ct)
         => Ok(await _mediator.Send(command, ct));
 
+    [Authorize(Policy = "StockReader")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPurchaseOrder(Guid id, CancellationToken ct)
         => Ok(await _mediator.Send(new GetPurchaseOrderQuery(id), ct));
 
+    [Authorize(Policy = "StockManager")]
     [HttpPost("{id}")]
     public async Task<IActionResult> PlacePurchaseOrder(Guid id, CancellationToken ct)
     {
@@ -31,6 +34,7 @@ public class PurchaseOrderController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Policy = "StockManager")]
     [HttpPost("{id}")]
     public async Task<IActionResult> ReceivePurchaseOrder(Guid id, CancellationToken ct)
     {
@@ -38,6 +42,7 @@ public class PurchaseOrderController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Policy = "StockManager")]
     [HttpPost("{id}")]
     public async Task<IActionResult> CancelPurchaseOrder(Guid id, CancellationToken ct)
     {

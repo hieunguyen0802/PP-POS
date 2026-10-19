@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# a new push to the same branch cancels the older run
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# least privilege: CI only needs to read the code
+permissions:
+  contents: read
+
+jobs:
+  dotnet:
+    name: .NET (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: POS
+            solution: BE/src/POS-App.sln
+            test: true
+          - name: Inventory
+            solution: Services/Inventory/src/Inventory.sln
+            test: false   # no test project yet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet restore ${{ matrix.solution }}
+      - run: dotnet build ${{ matrix.solution }} --no-restore -c Release
+      - if: matrix.test
+        run: dotnet test ${{ matrix.solution }} --no-build -c Release --verbosity normal
+
+  python:
+    name: Python (${{ matrix.service }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: Mcp
+            module: server
+          - service: Assistant
+            module: main
+    defaults:
+      run:
+        working-directory: Services/${{ matrix.service }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Import smoke test
+        run: uv run python -c "import ${{ matrix.module }}"
+        env:
+          # dummy values: settings need them to exist, nothing is called
+          MCP_KEYCLOAK_CLIENT_SECRET: ci-dummy
+          LLM_API_KEY: ci-dummy
+
+  docker:
+    name: Docker build (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    needs: [dotnet, python]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { image: pos, context: BE }
+          - { image: inventory, context: Services/Inventory }
+          - { image: mcp, context: Services/Mcp }
+          - { image: assistant, context: Services/Assistant }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          push: false
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}

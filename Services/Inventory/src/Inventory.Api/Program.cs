@@ -92,6 +92,7 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("InternalService", p => p.RequireRole("inventory-service"));
     options.AddPolicy("StockManager", p => p.RequireRole("Manager", "Admin"));
+    options.AddPolicy("StockReader", policy => policy.RequireRole("inventory-reader", "Manager", "Admin"));
 });
 
 builder.Services.AddHttpContextAccessor();

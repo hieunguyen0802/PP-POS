@@ -6,6 +6,8 @@ using POS.Application.Features.Products.Commands.UpdateProduct;
 using POS.Application.Features.Products.Commands.ToggleProductStatus;
 using POS.Application.Features.Products.Queries.GetProductById;
 using POS.Application.Features.Products.Queries.GetAllProducts;
+using POS.Application.Features.Products.Queries.SearchProducts;
+
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -13,7 +15,6 @@ namespace POS.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-[Authorize(AuthenticationSchemes = "Staff", Roles = "Manager,Admin")]
 public class ProductController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -23,6 +24,7 @@ public class ProductController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(AuthenticationSchemes = "Staff", Roles = "Manager,Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command, CancellationToken cancellationToken)
     {
@@ -30,6 +32,7 @@ public class ProductController : ControllerBase
         return Ok(productId);
     }
 
+    [Authorize(AuthenticationSchemes = "Staff", Roles = "Manager,Admin")]
     [HttpPost]
     public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand command, CancellationToken cancellationToken)
     {
@@ -37,7 +40,9 @@ public class ProductController : ControllerBase
         return NoContent();
     }
 
+
     [HttpGet("{productId}")]
+    [Authorize(AuthenticationSchemes = "Staff", Policy = "ProductReader")]
     public async Task<IActionResult> GetProductById(Guid productId, CancellationToken cancellationToken)
     {
         var product = await _mediator.Send(new GetProductByIdQuery(productId), cancellationToken);
@@ -45,6 +50,7 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
+    [Authorize(AuthenticationSchemes = "Staff", Roles = "Manager,Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAllProducts(CancellationToken cancellationToken)
     {
@@ -52,6 +58,18 @@ public class ProductController : ControllerBase
         return Ok(products);
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = "Staff", Policy = "ProductReader")]
+    public async Task<IActionResult> Search([FromQuery] string name, [FromQuery] int limit = 10, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return BadRequest("name is required");
+
+        var products = await _mediator.Send(new SearchProductsQuery(name, limit), cancellationToken);
+        return Ok(products);
+    }
+
+    [Authorize(AuthenticationSchemes = "Staff", Roles = "Manager,Admin")]
     [HttpPost]
     public async Task<IActionResult> ToggleProductStatus([FromBody] ToggleProductStatusCommand command, CancellationToken cancellationToken)
     {

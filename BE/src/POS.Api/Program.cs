@@ -155,6 +155,7 @@ builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder("Staff", "Customer")
         .RequireAuthenticatedUser()
         .Build();
+    options.AddPolicy("ProductReader", p => p.RequireRole("product-reader", "Manager", "Admin"));
 });
 
 builder.Services.AddAntiforgery(options => options.HeaderName = "XSRF-TOKEN");

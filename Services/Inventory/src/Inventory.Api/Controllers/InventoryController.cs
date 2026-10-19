@@ -21,6 +21,7 @@ public class InventoryController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(Policy = "StockReader")]
     [HttpGet("{productId}")]
     public async Task<IActionResult> GetStockLevel(Guid productId, CancellationToken cancellationToken)
     {
@@ -61,7 +62,7 @@ public class InventoryController : ControllerBase
         return Ok(newQuantity);
     }
 
-    [Authorize(Policy = "StockManager")]
+    [Authorize(Policy = "StockReader")]
     [HttpGet("{productId}")]
     public async Task<IActionResult> GetAdjustmentHistory(Guid productId, CancellationToken cancellationToken)
     {
