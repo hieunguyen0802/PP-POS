@@ -7,4 +7,5 @@ public interface IProductRepository : IRepository<Product>
     Task<Product?> GetByBarcodeAsync(string barcode, CancellationToken cancellationToken = default);
 
     Task<bool> ExistsByProductCodeAsync(string productCode, CancellationToken cancellationToken = default);
+    Task<List<Product>> SearchByNameAsync(string term, int limit, CancellationToken cancellationToken = default);
 }
