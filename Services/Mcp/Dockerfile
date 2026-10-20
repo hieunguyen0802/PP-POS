@@ -12,6 +12,7 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY --from=build /app/.venv /app/.venv
 COPY *.py ./
+COPY rag ./rag
 ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1
 RUN useradd --system --uid 1000 app
 USER app
