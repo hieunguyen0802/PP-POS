@@ -22,16 +22,31 @@ class ChatResponse(BaseModel):
     reply: str
     conversation_id: str
 
+def _find(exc: BaseException, kind: type) -> BaseException | None:
+    """Find an exception of `kind`, even when wrapped in an ExceptionGroup."""
+    if isinstance(exc, kind):
+        return exc
+    for sub in getattr(exc, "exceptions", []):
+        found = _find(sub, kind)
+        if found:
+            return found
+    return None
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest) -> ChatResponse:
     conversation_id = req.conversation_id or uuid.uuid4().hex
     history = get_history(conversation_id)
     try:
-        reply, new_history = await run_agent(history, req.message)
-    except openai.RateLimitError:
-        raise HTTPException(status_code=429, detail="LLM rate limit reached, try again shortly")
-    except openai.APIError as e:
-        raise HTTPException(status_code=502, detail=f"LLM provider error: {e.__class__.__name__}")
+        reply, new_history = await run_agent(
+            history,
+            req.message,
+            langsmith_extra={"metadata": {"conversation_id": conversation_id}},
+        )
+    except Exception as e:
+        if _find(e, openai.RateLimitError):
+            raise HTTPException(status_code=429, detail="All LLM models are rate limited, try again later")
+        if _find(e, openai.APIError):
+            raise HTTPException(status_code=502, detail="LLM provider error")
+        raise
     save_history(conversation_id, new_history)
     return ChatResponse(reply=reply, conversation_id=conversation_id)
