@@ -1,0 +1,41 @@
+[
+  {
+    "question": "Can I get my money back on something I opened last week?",
+    "contains": [["exchange", "store credit"], ["14"]]
+  },
+  {
+    "question": "What time do you close on Thursday?",
+    "contains": [["9 pm", "9:00 pm", "9pm", "21:00"]]
+  },
+  {
+    "question": "Who has to approve a $250 refund?",
+    "contains": [["manager"]]
+  },
+  {
+    "question": "How many points do I need for $5 off, and can I cash them out?",
+    "contains": [["100"], ["cannot", "can't", "not"]]
+  },
+  {
+    "question": "Can I get cash for a gift card?",
+    "contains": [["cannot", "can't", "no", "not"]]
+  },
+  {
+    "question": "How long is the warranty on a phone with a battery?",
+    "contains": [["12 months", "12-month", "one year", "1 year"]]
+  },
+  { "question": "Are you open on Christmas Day?", "contains": [["closed"]] },
+  { "question": "Do you do home delivery?", "expect_unknown": true },
+  {
+    "question": "Who approves a $700 purchase order?",
+    "expect_unknown": true,
+    "forbid": ["$200"],
+    "note": "must not borrow the refund-approval passage"
+  },
+  {
+    "question": "How much stock does Unbranded Soft Mouse have, and can I return it if I opened it 10 days ago?",
+    "contains": [
+      ["exchange", "store credit"],
+      ["stock", "units", "on hand"]
+    ]
+  }
+]
