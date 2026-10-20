@@ -1,0 +1,82 @@
+[
+  {
+    "question": "Can I get my money back on something I opened last week?",
+    "expect": ["Returns and Refunds Policy / Opened or used items"]
+  },
+  {
+    "question": "I bought a jumper 3 weeks ago and it is still in the bag. Can I return it?",
+    "expect": ["Returns and Refunds Policy / Standard returns"]
+  },
+  {
+    "question": "My kettle stopped working after two months",
+    "expect": [
+      "Returns and Refunds Policy / Faulty items",
+      "Product Care and Warranty / Making a warranty claim",
+      "Product Care and Warranty / Warranty periods"
+    ]
+  },
+  {
+    "question": "Can I return clearance stuff?",
+    "expect": ["Returns and Refunds Policy / Clearance and sale items"]
+  },
+  {
+    "question": "I lost my receipt, what now?",
+    "expect": ["Returns and Refunds Policy / Returns without a receipt"]
+  },
+  {
+    "question": "Who has to approve a big refund?",
+    "expect": ["Returns and Refunds Policy / Large refunds"]
+  },
+  {
+    "question": "What time do you close on Thursday?",
+    "expect": ["Opening Hours and Contact / Trading hours"]
+  },
+  {
+    "question": "Are you open on Christmas Day?",
+    "expect": ["Opening Hours and Contact / Public holidays"]
+  },
+  {
+    "question": "Where can I park?",
+    "expect": ["Opening Hours and Contact / Parking"]
+  },
+  {
+    "question": "How many points do I earn per dollar?",
+    "expect": ["Loyalty Program / Earning points"]
+  },
+  {
+    "question": "Do I lose my points if I return something?",
+    "expect": ["Loyalty Program / Returns and points"]
+  },
+  {
+    "question": "Can I pay half by card and half in cash?",
+    "expect": ["Payments and Gift Cards / Split payments"]
+  },
+  {
+    "question": "Can I turn a gift card back into cash?",
+    "expect": [
+      "Payments and Gift Cards / Gift cards",
+      "Returns and Refunds Policy / Gift cards"
+    ]
+  },
+  {
+    "question": "Will you match a cheaper price from another store?",
+    "expect": ["Payments and Gift Cards / Price match"]
+  },
+  {
+    "question": "How long is the warranty on a laptop?",
+    "expect": ["Product Care and Warranty / Warranty periods"]
+  },
+
+  {
+    "question": "Who approves a $700 purchase order?",
+    "forbid": [
+      "Stock and Reordering Procedures (INTERNAL, STAFF ONLY) / Purchase order approval"
+    ],
+    "note": "staff-only doc must never reach a public user"
+  },
+
+  {
+    "question": "Do you do home delivery?",
+    "note": "not covered by any doc; the answer eval checks the model says it does not know"
+  }
+]

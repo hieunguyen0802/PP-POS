@@ -16,6 +16,15 @@ class Settings(BaseSettings):
     port: int = 8200
     
     pos_base_url: str = "http://localhost:5200"
-
+    
+    # --- RAG ---
+    llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    llm_api_key: str = ""
+    embedding_model: str = "gemini-embedding-001"
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_collection: str = "knowledge"
+    
+    knowledge_top_k: int = 4
+    knowledge_audiences: list[str] = ["public"]
 
 settings = Settings()
