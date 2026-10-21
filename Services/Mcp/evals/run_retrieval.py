@@ -3,9 +3,18 @@ import json
 import sys
 from pathlib import Path
 
-from rag.retrieve import search
+HYBRID = "--hybrid" in sys.argv
+if "--langchain" in sys.argv or HYBRID:
+    from rag_langchain.retrieve import search
+    if HYBRID:
+        from functools import partial
 
-CASES = Path(__file__).with_name("retrieval_cases.json")
+        search = partial(search, hybrid=True)
+else:
+    from rag.retrieve import search
+    
+_name = next((a for a in sys.argv[1:] if a.endswith(".json")), "retrieval_cases.json")
+CASES = Path(__file__).with_name(_name)
 K = 4
 
 

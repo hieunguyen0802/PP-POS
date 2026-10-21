@@ -69,9 +69,7 @@
 
   {
     "question": "Who approves a $700 purchase order?",
-    "forbid": [
-      "Stock and Reordering Procedures (INTERNAL, STAFF ONLY) / Purchase order approval"
-    ],
+    "forbid": ["Stock and Reordering Procedures / Purchase order approval"],
     "note": "staff-only doc must never reach a public user"
   },
 
