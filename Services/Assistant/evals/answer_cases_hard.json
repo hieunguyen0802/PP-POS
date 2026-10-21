@@ -9,7 +9,7 @@
     "name": "vague, should ask back",
     "question": "Can I return it?",
     "expect_clarify": true,
-    "forbid": ["30 days"]
+    "forbid": ["store credit", "14 days"]
   },
 
   {

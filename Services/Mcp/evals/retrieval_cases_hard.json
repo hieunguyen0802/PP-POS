@@ -1,0 +1,66 @@
+[
+  {
+    "question": "EFTPOS",
+    "expect": [
+      "Payments and Gift Cards / Accepted payment methods",
+      "Payments and Gift Cards / Surcharges"
+    ]
+  },
+  {
+    "question": "amex fee",
+    "expect": ["Payments and Gift Cards / Surcharges"]
+  },
+  {
+    "question": "5550 0123",
+    "expect": ["Opening Hours and Contact / Contact"]
+  },
+  {
+    "question": "help@example-store.test",
+    "expect": ["Opening Hours and Contact / Contact"]
+  },
+  {
+    "question": "good friday",
+    "expect": ["Opening Hours and Contact / Public holidays"]
+  },
+  {
+    "question": "do my ACL rights apply?",
+    "expect": ["Returns and Refunds Policy / Faulty items"]
+  },
+  { "question": "1.5%", "expect": ["Payments and Gift Cards / Surcharges"] },
+  { "question": "2,000 points", "expect": ["Loyalty Program / Tiers"] },
+  { "question": "free alterations", "expect": ["Loyalty Program / Tiers"] },
+  {
+    "question": "lowest price in the last 90 days",
+    "expect": ["Returns and Refunds Policy / Returns without a receipt"]
+  },
+  {
+    "question": "refnd polcy for faulty itmes",
+    "expect": ["Returns and Refunds Policy / Faulty items"]
+  },
+  { "question": "parking", "expect": ["Opening Hours and Contact / Parking"] },
+  {
+    "question": "warranty",
+    "expect": [
+      "Product Care and Warranty / Warranty periods",
+      "Product Care and Warranty / Making a warranty claim",
+      "Product Care and Warranty / What warranty does not cover"
+    ]
+  },
+  {
+    "question": "can I pay by cheque",
+    "expect": ["Payments and Gift Cards / Accepted payment methods"]
+  },
+  {
+    "question": "how long does a supplier repair take",
+    "expect": ["Product Care and Warranty / Making a warranty claim"]
+  },
+
+  {
+    "question": "Who has to approve a stock adjustment over 10 units?",
+    "forbid": ["Stock and Reordering Procedures / Stock adjustments"]
+  },
+  {
+    "question": "What is the procedure when stock falls below the reorder level?",
+    "forbid": ["Stock and Reordering Procedures / Reordering"]
+  }
+]
