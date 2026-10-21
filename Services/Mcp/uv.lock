@@ -1355,34 +1355,29 @@ name = "pos-mcp"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "fastembed" },
     { name = "httpx" },
+    { name = "langchain-openai" },
+    { name = "langchain-qdrant" },
+    { name = "langchain-text-splitters" },
     { name = "mcp", extra = ["cli"] },
     { name = "openai" },
     { name = "pydantic-settings" },
     { name = "qdrant-client" },
 ]
 
-[package.optional-dependencies]
-langchain = [
-    { name = "fastembed" },
-    { name = "langchain-openai" },
-    { name = "langchain-qdrant" },
-    { name = "langchain-text-splitters" },
-]
-
 [package.metadata]
 requires-dist = [
-    { name = "fastembed", marker = "extra == 'langchain'", specifier = ">=0.9.0" },
+    { name = "fastembed", specifier = ">=0.9.0" },
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "langchain-openai", marker = "extra == 'langchain'", specifier = ">=1.7.2" },
-    { name = "langchain-qdrant", marker = "extra == 'langchain'", specifier = ">=1.1.0" },
-    { name = "langchain-text-splitters", marker = "extra == 'langchain'", specifier = ">=1.1.3" },
+    { name = "langchain-openai", specifier = ">=1.7.2" },
+    { name = "langchain-qdrant", specifier = ">=1.1.0" },
+    { name = "langchain-text-splitters", specifier = ">=1.1.3" },
     { name = "mcp", extras = ["cli"], specifier = ">=2.3.0" },
     { name = "openai", specifier = ">=3.35.1" },
     { name = "pydantic-settings", specifier = ">=2.16.0" },
     { name = "qdrant-client", specifier = ">=1.19.1" },
 ]
-provides-extras = ["langchain"]
 
 [[package]]
 name = "protobuf"
