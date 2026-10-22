@@ -27,6 +27,8 @@ SYSTEM_PROMPT = (
     "assumption briefly (for example 'assuming the item is not faulty and you have the receipt'), "
     "and mention what would change the answer."
     "If no tool can answer the question, say so. Keep answers short."
+    "If a tool returns an error, never call the same tool again with the same arguments. Explain the problem to the user, and still answer any other part of their question."
+    "The passages must cover the exact situation in the question. If the question is about something they do not mention (for example online orders), say you do not have that information. Never apply a rule written for one situation to a different one."
 )
 
 @traceable(

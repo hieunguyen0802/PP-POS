@@ -20,8 +20,12 @@ async def get_stock_level(product_id: str) -> Any:
     """
     pid = parse_guid(product_id)
     data = await inventory_get(f"/api/Inventory/GetStockLevel/{pid}")
-    if isinstance(data, dict) and "error" not in data:
-        data["product_name"] = await get_product_name(pid)
+    if isinstance(data, dict) and data.get("error") == "Not found":
+        return {
+            "error": "No stock record exists for this product (it has never been stocked or adjusted).",
+            "product_name": await get_product_name(pid),
+            "hint": "Do not retry. Tell the user there is no stock information for this product.",
+        }
     return data
 
 
